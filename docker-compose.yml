@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  finances-bot:
+    container_name: finances-bot
+    build: .
+    restart: unless-stopped
+    command: python runner.py
+    env_file: .env
+    volumes:
+      - ./src:/code
+    depends_on:
+      - finances-migrations
+    networks:
+      finances:
+        aliases:
+          - finances-bot
+  
+  finances-db:
+    container_name: finances-db
+    image: postgres
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - 5432
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    networks:
+      finances:
+        aliases:
+          - finances-db
+  
+  finances-migrations:
+    container_name: finances-migrations
+    build: .
+    command: alembic upgrade head
+    env_file: .env
+    volumes:
+      - ./src:/code
+    depends_on:
+      - finances-db
+    networks:
+      finances:
+        aliases:
+          - finances-migrations
+
+networks:
+  finances:
+    external: true
