@@ -37,6 +37,10 @@ async def entered_name(
     state: FSMContext,
 ):
     wallet_name = m.text
+    if len(wallet_name) > 100:
+        await m.answer("Слишком длинное название для кошелька")
+        return
+
     async with state.proxy() as data:
         wallet_id = data["wallet_id"]
     await state.finish()

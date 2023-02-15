@@ -24,7 +24,7 @@ async def entered_name(
 ):
     wallet_name = m.text
     if len(wallet_name) > 100:
-        await m.answer("Слишком длинное название кошелька")
+        await m.answer("Слишком длинное название для кошелька")
         return 
     
     await state.finish()
