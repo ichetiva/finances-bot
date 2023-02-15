@@ -1,3 +1,4 @@
+import logging
 from typing import Generic, Type, TypeVar
 
 from sqlalchemy import select, update
@@ -22,8 +23,8 @@ class BaseDAO(Generic[Model]):
         stmt = select(self.model).filter_by(**kwargs)
         if for_update:
             stmt = stmt.with_for_update()
-        instance = await self.session.scalar(stmt)
-        return instance
+        instance = await self.session.execute(stmt)
+        return instance.scalar_one_or_none()
     
     async def get_or_create(
         self,
@@ -37,7 +38,7 @@ class BaseDAO(Generic[Model]):
         kwargs.update(defaults)
         instance = self.model(**kwargs)
         self.session.add(instance)
-        await self.session.flush()
+        await self.session.commit()
         return True, instance
     
     async def single_update(

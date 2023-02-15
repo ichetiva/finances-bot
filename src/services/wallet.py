@@ -16,6 +16,12 @@ class WalletService:
             currency=wallet.currency,
         )
         return wallet_dto
+    
+    def convert_multiple_to_dto(self, wallets: Wallet) -> list[WalletDTO]:
+        wallets_dto = []
+        for wallet in wallets:
+            wallets_dto.append(self.convert_to_dto(wallet))
+        return wallets_dto
 
     def convert_multiple_to_dto(self, wallets: list[Wallet]) -> list[WalletDTO]:
         list_wallet_dto = []
@@ -26,3 +32,14 @@ class WalletService:
     async def get_by_user(self, user_id: int):
         wallets = await self.daos.wallet_dao.get_by_tg_id(user_id)
         return wallets
+    
+    async def create(self, user_id: int, name: str):
+        await self.daos.wallet_dao.create(user_id, name)
+    
+    async def delete(self, wallet_id: int):
+        await self.daos.wallet_dao.delete(wallet_id)
+    
+    async def edit_name(self, wallet_id: int, wallet_name: str):
+        user = await self.daos.wallet_dao.get(for_update=True, id=wallet_id)
+        user.name = wallet_name
+        await self.daos.session.commit()

@@ -11,7 +11,7 @@ class ServicesFactory:
     
     @property
     def user_service(self):
-        return UserService(self.daos)
+        return UserService(self, self.daos)
     
     @property
     def wallet_service(self):
