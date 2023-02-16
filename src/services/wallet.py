@@ -43,3 +43,7 @@ class WalletService:
         user = await self.daos.wallet_dao.get(for_update=True, id=wallet_id)
         user.name = wallet_name
         await self.daos.session.commit()
+    
+    async def get_currency_by_wallet(self, wallet_id: int):
+        currency = await self.daos.wallet_dao.get_currency_by_wallet(wallet_id)
+        return currency

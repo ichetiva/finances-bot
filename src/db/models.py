@@ -36,6 +36,6 @@ class Transaction(Base):
 
     id = Column(Integer, primary_key=True)
     wallet_id = Column(Integer, ForeignKey("wallets.id"))
-    value = Column(Float, nullable=False)
+    amount = Column(Float, nullable=False)
     comment = Column(String(500), default=None)
     created_at = Column(DateTime, default=func.now())

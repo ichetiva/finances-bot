@@ -23,3 +23,12 @@ class WalletDAO(BaseDAO[Wallet]):
         stmt = delete(Wallet).where(Wallet.id == wallet_id)
         await self.session.execute(stmt)
         await self.session.commit()
+    
+    async def update_balance(self, wallet_id: int, amount: float):
+        wallet = await self.get(for_update=True, id=wallet_id)
+        wallet.balance += amount
+    
+    async def get_currency_by_wallet(self, wallet_id: int) -> str:
+        stmt = select(Wallet.currency).where(Wallet.id == wallet_id)
+        currency = await self.session.scalar(stmt)
+        return currency

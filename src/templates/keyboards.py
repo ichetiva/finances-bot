@@ -42,6 +42,25 @@ CONFIRM_DELETE_WALLET = (
 )
 
 
+def get_list_transactions_keyboard(wallet_id: int, page: int, max_page: int):
+    prev_page = page - 1 if page - 1 != 0 else max_page
+    next_page = page + 1 if page + 1 <= max_page else 1
+    keyboard = (
+        InlineKeyboardMarkup()
+        .add(
+            InlineKeyboardButton(
+                "<",
+                callback_data=callbacks.TRANSACTIONS.new(page=prev_page, wallet_id=wallet_id)),
+            InlineKeyboardButton(f"{page}/{max_page}", callback_data=" "),
+            InlineKeyboardButton(
+                ">",
+                callback_data=callbacks.TRANSACTIONS.new(page=next_page, wallet_id=wallet_id))
+        )
+    )
+    return keyboard
+
+
+
 def get_wallets_keyboard(wallets: list[WalletDTO]):
     keyboard = InlineKeyboardMarkup()
     for wallet in wallets:
